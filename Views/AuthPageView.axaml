@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FlawlClient.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="vm:AuthPageViewModel"
+             x:Class="FlawlClient.Views.AuthPageView">
+    <Design.DataContext>
+        <vm:AuthPageViewModel />
+    </Design.DataContext>
+
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8">
+        <TextBox Width="250" PlaceholderText="Host" Text="{Binding Host}" />
+        <TextBox Width="250" PlaceholderText="Login" Text="{Binding Login}" />
+        <TextBox PasswordChar="█" Width="250" PlaceholderText="Password" Text="{Binding Password}" />
+        <Button Width="75" Command="{Binding ProvideAuthorization}" IsEnabled="{Binding CanInteract}" Content="Login"
+                HorizontalContentAlignment="Center"
+                HorizontalAlignment="Center" />
+        <Button Width="75" Command="{Binding ProvideRegistration}" IsEnabled="{Binding CanInteract}" Content="Register"
+                HorizontalContentAlignment="Center"
+                HorizontalAlignment="Center" />
+        <Label Content="{Binding Exception}" Foreground="Red" HorizontalAlignment="Center" Margin="0,10,0,0" />
+    </StackPanel>
+</UserControl>

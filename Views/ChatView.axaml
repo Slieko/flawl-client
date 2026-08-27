@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FlawlClient.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="vm:ChatViewModel"
+             x:Class="FlawlClient.Views.ChatView">
+
+    <Grid RowDefinitions="*,Auto">
+        <ScrollViewer Grid.Row="0">
+            <ItemsControl ItemsSource="{Binding Messages}" Background="Black">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <ContentPresenter Margin="10" Content="{Binding}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Interaction.Behaviors>
+                <EventTriggerBehavior EventName="Loaded">
+                    <InvokeCommandAction Command="{Binding ScrollToBottom}" PassEventArgsToCommand="True" />
+                </EventTriggerBehavior>
+            </Interaction.Behaviors>
+        </ScrollViewer>
+
+        <Label Grid.Row="1" Margin="10,5,0,0" Content="{Binding Exception}" />
+        <TextBox Grid.Row="1" MaxLength="500" AcceptsReturn="True" TextWrapping="Wrap" VerticalAlignment="Bottom"
+                 Margin="5" PlaceholderText="Enter message..." Text="{Binding Message}">
+            <Interaction.Behaviors>
+                <KeyDownEventTrigger>
+                    <InvokeCommandAction PassEventArgsToCommand="True" Command="{Binding KeyPressed}" />
+                </KeyDownEventTrigger>
+            </Interaction.Behaviors>
+        </TextBox>
+    </Grid>
+</UserControl>

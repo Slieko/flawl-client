@@ -1,0 +1,41 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="FlawlClient.App"
+             xmlns:local="using:FlawlClient"
+             xmlns:dataModels="clr-namespace:FlawlClient.Flawl.DataModels"
+             RequestedThemeVariant="Default">
+    <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+    <Application.DataTemplates>
+        <local:ViewLocator />
+        <DataTemplate DataType="dataModels:ChatModel">
+            <StackPanel Orientation="Horizontal">
+                <Image Margin="0,0,10,0" VerticalAlignment="Top" Width="32" Height="32"
+                       Source="{Binding ChatImage}">
+                    <Image.Clip>
+                        <RectangleGeometry RadiusX="16" Rect="0,0,32,32" RadiusY="16" />
+                    </Image.Clip>
+                </Image>
+                <Label Content="{Binding Name}" />
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate DataType="dataModels:MessageModel">
+            <Grid ColumnDefinitions="64,*" ColumnSpacing="4">
+                <Image Margin="0,0,10,0" VerticalAlignment="Top" Width="64" Height="64"
+                       Source="{Binding SenderModel?.Avatar}">
+                    <Image.Clip>
+                        <RectangleGeometry RadiusX="32" Rect="0,0,64,64" RadiusY="32" />
+                    </Image.Clip>
+                </Image>
+                <SelectableTextBlock Grid.Column="1" FontWeight="Bold" Text="{Binding SenderModel?.Nickname}" />
+                <SelectableTextBlock Grid.Column="1" Margin="0,25,0,0" TextWrapping="Wrap" Text="{Binding Content}" />
+                <SelectableTextBlock Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                     Text="{Binding SendTime}" />
+            </Grid>
+        </DataTemplate>
+    </Application.DataTemplates>
+
+    <Application.Styles>
+        <FluentTheme />
+    </Application.Styles>
+</Application>
