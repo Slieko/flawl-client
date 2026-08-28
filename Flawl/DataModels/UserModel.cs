@@ -16,5 +16,5 @@ public class UserModel
     [JsonPropertyName("username")] public string Username { get; set; }
     [JsonPropertyName("nickname")] public string Nickname { get; set; }
 
-    [JsonIgnore] public required IImage Avatar { get; set; }
+    [JsonIgnore] public IImage? Avatar { get; set; }
 }

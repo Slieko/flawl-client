@@ -5,37 +5,43 @@
              xmlns:dataModels="clr-namespace:FlawlClient.Flawl.DataModels"
              RequestedThemeVariant="Default">
     <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
-
     <Application.DataTemplates>
         <local:ViewLocator />
         <DataTemplate DataType="dataModels:ChatModel">
-            <StackPanel Orientation="Horizontal">
-                <Image Margin="0,0,10,0" VerticalAlignment="Top" Width="32" Height="32"
-                       Source="{Binding ChatImage}">
-                    <Image.Clip>
-                        <RectangleGeometry RadiusX="16" Rect="0,0,32,32" RadiusY="16" />
-                    </Image.Clip>
-                </Image>
-                <Label Content="{Binding Name}" />
-            </StackPanel>
+            <Panel>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Image VerticalAlignment="Center" Width="32" Height="32"
+                           Source="{Binding ChatImage}">
+                        <Image.Clip>
+                            <RectangleGeometry RadiusX="16" Rect="0,0,32,32" RadiusY="16" />
+                        </Image.Clip>
+                    </Image>
+                    <Label VerticalAlignment="Center" Content="{Binding Name}" />
+                </StackPanel>
+            </Panel>
         </DataTemplate>
         <DataTemplate DataType="dataModels:MessageModel">
-            <Grid ColumnDefinitions="64,*" ColumnSpacing="4">
-                <Image Margin="0,0,10,0" VerticalAlignment="Top" Width="64" Height="64"
-                       Source="{Binding SenderModel?.Avatar}">
-                    <Image.Clip>
-                        <RectangleGeometry RadiusX="32" Rect="0,0,64,64" RadiusY="32" />
-                    </Image.Clip>
-                </Image>
-                <SelectableTextBlock Grid.Column="1" FontWeight="Bold" Text="{Binding SenderModel?.Nickname}" />
-                <SelectableTextBlock Grid.Column="1" Margin="0,25,0,0" TextWrapping="Wrap" Text="{Binding Content}" />
-                <SelectableTextBlock Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top"
-                                     Text="{Binding SendTime}" />
-            </Grid>
+            <Panel>
+                <Rectangle RadiusX="16" RadiusY="16" Fill="#0A0A0A" />
+                <Grid Margin="8" ColumnDefinitions="64,*" ColumnSpacing="12">
+                    <Image HorizontalAlignment="Center" VerticalAlignment="Top" Width="64" Height="64"
+                           Source="{Binding SenderModel?.Avatar}">
+                        <Image.Clip>
+                            <RectangleGeometry RadiusX="32" Rect="0,0,64,64" RadiusY="32" />
+                        </Image.Clip>
+                    </Image>
+                    <SelectableTextBlock Grid.Column="1" FontWeight="Bold" Text="{Binding SenderModel?.Nickname}" />
+                    <SelectableTextBlock Grid.Column="1" Margin="0,25,0,0" TextWrapping="Wrap" Text="{Binding Content}" />
+                    <SelectableTextBlock Grid.Column="1" Margin="0,0,4,0" HorizontalAlignment="Right"
+                                         VerticalAlignment="Top"
+                                         Text="{Binding SendTime.DateTime}" />
+                </Grid>
+            </Panel>
         </DataTemplate>
     </Application.DataTemplates>
 
     <Application.Styles>
         <FluentTheme />
+        <StyleInclude Source="AppStyles.axaml" />
     </Application.Styles>
 </Application>

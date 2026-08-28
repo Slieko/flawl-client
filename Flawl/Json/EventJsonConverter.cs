@@ -18,9 +18,20 @@ public class EventJsonConverter : JsonConverter<Event>
 
         var root = doc.RootElement;
 
-        if (root.GetProperty("type").GetString() == "message-sent")
-            return JsonSerializer.Deserialize<MessageSentEvent>(root.GetRawText(), options);
-
-        return JsonSerializer.Deserialize<Event>(root.GetRawText(), options);
+        switch (root.GetProperty("type").GetString())
+        {
+            case "nickname-updated":
+                return JsonSerializer.Deserialize<NicknameChangedEvent>(root.GetRawText(), options);
+            case "avatar-updated":
+                return JsonSerializer.Deserialize<MessageSentEvent>(root.GetRawText(), options);
+            case "chat-image-updated":
+                return JsonSerializer.Deserialize<ChatAvatarChangedEvent>(root.GetRawText(), options);
+            case "chat-created":
+                return JsonSerializer.Deserialize<ChatCreatedEvent>(root.GetRawText(), options);
+            case "message-sent":
+                return JsonSerializer.Deserialize<MessageSentEvent>(root.GetRawText(), options);
+            default:
+                return null;
+        }
     }
 }

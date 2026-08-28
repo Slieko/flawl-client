@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using FlawlClient.Flawl.DataModels;
@@ -34,7 +33,7 @@ public class UserApi
         _logger.LogInformation($"Successfully initialized {GetType().Name}");
     }
 
-    private async Task LoadUserAvatar(UserModel userModel)
+    public async Task LoadUserAvatar(UserModel userModel)
     {
         var response = await _requestHelper.GetAvatar(userModel.UserId);
 
@@ -42,9 +41,7 @@ public class UserApi
 
         try
         {
-            IImage image = new Bitmap(avatar);
-
-            userModel.Avatar = image;
+            userModel.Avatar = new Bitmap(avatar);
         }
         catch (Exception e)
         {

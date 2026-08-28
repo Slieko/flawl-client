@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FlawlClient.Flawl.Api;
@@ -11,10 +12,10 @@ namespace FlawlClient.ViewModels;
 public partial class MainPageViewModel : ViewModelBase
 {
     private static readonly ApiCaller ApiCaller = App.ServiceProvider?.GetRequiredService<ApiCaller>()!;
-    [ObservableProperty] private ObservableCollection<ChatModel> _chats = ApiCaller.ChatApi.Chats;
-    [ObservableProperty] private ObservableObject? _rightPanelContent;
 
-    [ObservableProperty] private string _username = ApiCaller.UserApi.CurrentUser.Username;
+    [ObservableProperty] private ObservableCollection<ChatModel>? _chats;
+    [ObservableProperty] private UserModel? _currentUser;
+    [ObservableProperty] private ObservableObject? _rightPanelContent;
 
     [RelayCommand]
     public async Task PerformLogout()
@@ -25,13 +26,21 @@ public partial class MainPageViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    public void DisplayChat(ChatModel chatModel)
+    public void DisplayChat(SelectionChangedEventArgs args)
     {
-        RightPanelContent = new ChatViewModel
-        {
-            ChatName = chatModel.Name,
-            ChatId = chatModel.Id,
-            Messages = chatModel.Messages
-        };
+        if (args.AddedItems[0] is ChatModel chatModel)
+            RightPanelContent = new ChatViewModel
+            {
+                ChatName = chatModel.Name,
+                ChatId = chatModel.Id,
+                Messages = chatModel.Messages,
+                ChatImage = chatModel.ChatImage
+            };
+    }
+
+    [RelayCommand]
+    public async Task Test()
+    {
+        // await ApiCaller.ChatApi.CreateChat("test", [1]);
     }
 }

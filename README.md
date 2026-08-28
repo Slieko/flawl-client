@@ -11,5 +11,12 @@
 
 to get started you need a **[server](https://github.com/Slieko/flawl-api)**
 
+## TODO:
+- [ ] Fix scroll to bottom in chat when a message received
+- [ ] Implement all chat features
+- [ ] Implement all user features
+- [ ] Better design
+- [ ] Light theme support
 
-
+## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

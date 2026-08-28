@@ -4,6 +4,8 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Media;
+using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FlawlClient.Flawl.Api;
@@ -17,7 +19,9 @@ public partial class ChatViewModel : ViewModelBase
     private readonly ApiCaller _apiCaller = App.ServiceProvider?.GetRequiredService<ApiCaller>()!;
     public long ChatId;
 
-    [ObservableProperty] private string? _chatName;
+    public IImage? ChatImage { get; set; }
+    public string? ChatName { get; set; }
+
     [ObservableProperty] private string? _exception;
     [ObservableProperty] private string? _message;
     [ObservableProperty] private ObservableCollection<MessageModel>? _messages;
@@ -45,5 +49,27 @@ public partial class ChatViewModel : ViewModelBase
             scrollViewer.Offset = new Vector(
                 scrollViewer.Offset.X,
                 scrollViewer.Extent.Height - scrollViewer.Viewport.Height);
+    }
+
+    [RelayCommand]
+    public async Task ChangeAvatar(RoutedEventArgs args)
+    {
+        if (args.Source is Visual visual)
+        {
+            var topLevel = TopLevel.GetTopLevel(visual)!;
+
+            var file = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            {
+                SuggestedFileType = FilePickerFileTypes.ImageAll,
+                Title = "Choose an image",
+                AllowMultiple = false
+            });
+
+            if (file.Count >= 1)
+            {
+                await using var stream = await file[0].OpenReadAsync();
+                await _apiCaller.ChatApi.UploadChatImage(stream, ChatId);
+            }
+        }
     }
 }

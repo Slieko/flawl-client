@@ -86,6 +86,11 @@ public class RequestHelper
         return await StorageRequest($"/avatars/{userId}", HttpMethod.Get);
     }
 
+    public async ValueTask<HttpResponseMessage> GetChatAvatar(long chatId)
+    {
+        return await StorageRequest($"/chat/{chatId}", HttpMethod.Get);
+    }
+
     public async ValueTask<HttpResponseMessage> GetAttachment(string attachment)
     {
         return await StorageRequest($"/attachments/{attachment}", HttpMethod.Get);

@@ -22,7 +22,13 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ChatApi>();
         services.AddSingleton<EventHandler>();
         services.AddSingleton<RequestHelper>();
-        services.AddLogging(builder => builder.AddSimpleConsole(options => options.SingleLine = true));
+        services.AddLogging(builder =>
+        {
+            builder.AddSimpleConsole(options => options.SingleLine = true);
+#if DEBUG
+            builder.SetMinimumLevel(LogLevel.Debug);
+#endif
+        });
 
         return services;
     }

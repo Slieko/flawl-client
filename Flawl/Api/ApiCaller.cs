@@ -40,6 +40,10 @@ public class ApiCaller
             await UserApi.Initialize(_credential!.UserName!);
             await ChatApi.Initialize();
             await Task.WhenAll(EventHandler.Initialize());
+
+            App.ServiceProvider?.GetRequiredService<MainPageViewModel>().Chats = ChatApi.Chats;
+            App.ServiceProvider?.GetRequiredService<MainPageViewModel>().CurrentUser = UserApi.CurrentUser;
+
             _logger.LogInformation($"Done! Took {(DateTime.Now - start).TotalMilliseconds}ms");
         }
         else
@@ -120,7 +124,7 @@ public class ApiCaller
         try
         {
             AppDomain.CurrentDomain.ProcessExit +=
-                async (sender, args) => await EventHandler.CloseConnection("Client exit");
+                async (_, _) => await EventHandler.CloseConnection("Client exit");
 
             _credential = CredentialManager.GetICredential("FlawlClient:refreshToken");
 

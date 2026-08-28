@@ -6,7 +6,6 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="vm:MainPageViewModel"
              x:Class="FlawlClient.Views.MainPageView">
-
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" MinWidth="100" MaxWidth="400" />
@@ -14,19 +13,21 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <ListBox Grid.Column="0" Name="ChatList" ItemsSource="{Binding Chats}" Background="#101010">
-            <Interaction.Behaviors>
-                <EventTriggerBehavior EventName="SelectionChanged">
-                    <InvokeCommandAction Command="{Binding DisplayChat}"
-                                         CommandParameter="{Binding #ChatList.SelectedItem}" />
-                </EventTriggerBehavior>
-            </Interaction.Behaviors>
-        </ListBox>
-        <Button Grid.Column="0" Command="{Binding PerformLogout}" Content="Logout" />
+        <Panel>
+            <ListBox ItemsSource="{Binding Chats}" Background="#101010">
+                <Interaction.Behaviors>
+                    <EventTriggerBehavior EventName="SelectionChanged">
+                        <InvokeCommandAction Command="{Binding DisplayChat}" PassEventArgsToCommand="True" />
+                    </EventTriggerBehavior>
+                </Interaction.Behaviors>
+            </ListBox>
+
+            <Button VerticalAlignment="Bottom" Margin="30" Command="{Binding PerformLogout}" Content="Logout" />
+            <!--    <Button VerticalAlignment="Bottom" Content="+" Command="{Binding Test}" /> -->
+        </Panel>
+
         <GridSplitter Grid.Column="1" />
 
         <ContentControl Content="{Binding RightPanelContent}" Grid.Column="2" />
-
-
     </Grid>
 </UserControl>

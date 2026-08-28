@@ -15,6 +15,7 @@ namespace FlawlClient.Flawl.Api;
 
 public class EventHandler
 {
+    private readonly UserApi _userApi = App.ServiceProvider?.GetRequiredService<UserApi>()!;
     private readonly ChatApi _chatApi = App.ServiceProvider?.GetRequiredService<ChatApi>()!;
     private readonly ILogger _logger = App.ServiceProvider?.GetRequiredService<ILogger<EventHandler>>()!;
     private readonly RequestHelper _requestHelper = App.ServiceProvider?.GetRequiredService<RequestHelper>()!;
@@ -27,7 +28,7 @@ public class EventHandler
         _logger.LogInformation("Trying establish websocket connection...");
         _webSocket.Options.SetRequestHeader("Authorization", "Bearer " + _requestHelper.JwtToken?.AccessToken);
 
-        var task = Connect();
+        _ = Connect();
     }
 
     private async Task Connect()
@@ -43,8 +44,13 @@ public class EventHandler
             var result = await _webSocket.ReceiveAsync(buffer, CancellationToken.None);
 
             if (result.EndOfMessage)
+            {
+                var json = Encoding.UTF8.GetString(buffer.Span[..result.Count]);
+
+                _logger.LogDebug(json);
                 await HandleEvent(
-                    JsonSerializer.Deserialize<Event>(Encoding.UTF8.GetString(buffer.Span[..result.Count])));
+                    JsonSerializer.Deserialize<Event>(json));
+            }
         }
     }
 
@@ -56,14 +62,33 @@ public class EventHandler
 
     private async Task HandleEvent(Event? @event)
     {
-        if (@event is null) return;
-
-        if (@event is MessageSentEvent messageSentEvent)
+        switch (@event)
         {
-            var response = await _requestHelper.GetMessage(messageSentEvent.MessageId);
-            var message = JsonSerializer.Deserialize<MessageModel>(await response.Content.ReadAsStringAsync())!;
+            case MessageSentEvent messageSentEvent:
+            {
+                var response = await _requestHelper.GetMessage(messageSentEvent.MessageId);
+                var message = JsonSerializer.Deserialize<MessageModel>(await response.Content.ReadAsStringAsync())!;
 
-            await _chatApi.AddMessage(message);
+                await _chatApi.AddMessage(message);
+                break;
+            }
+            case ChatAvatarChangedEvent chatAvatarChangedEvent:
+            {
+                await _chatApi.LoadChatImage(chatAvatarChangedEvent.ChatId);
+                break;
+            }
+            case NicknameChangedEvent nicknameChangedEvent:
+            {
+                _userApi.GetUser(nicknameChangedEvent.IssuerId).Nickname = nicknameChangedEvent.Nickname;
+                break;
+            }
+            case AvatarChangedEvent avatarChangedEvent:
+            {
+                await _userApi.LoadUserAvatar(_userApi.GetUser(avatarChangedEvent.IssuerId));
+                break;
+            }
+            default:
+                return;
         }
     }
 }
